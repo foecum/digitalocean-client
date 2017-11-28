@@ -7,13 +7,21 @@ import (
 	"golang.org/x/oauth2"
 )
 
+type Client interface {
+	GetClient() error
+}
+
+type client struct {
+	cl *godo.Client
+}
+
 // TokenSource ...
-type TokenSource struct {
+type tokenSource struct {
 	AccessToken string
 }
 
 // Token to satisfy the oauth2 Token interface. Returns a Token
-func (t *TokenSource) Token() (*oauth2.Token, error) {
+func (t *tokenSource) Token() (*oauth2.Token, error) {
 	token := &oauth2.Token{
 		AccessToken: t.AccessToken,
 	}
@@ -21,11 +29,14 @@ func (t *TokenSource) Token() (*oauth2.Token, error) {
 }
 
 // NewClient for authentication
-func NewClient(accessToken string) *godo.Client {
-	tokenSource := &TokenSource{
-		AccessToken: accessToken,
-	}
+func (c *client) GetClient(accessToken string) *godo.Client {
+	if c.cl == nil {
+		tokenSource := &tokenSource{
+			AccessToken: accessToken,
+		}
 
-	oauthClient := oauth2.NewClient(context.Background(), tokenSource)
-	return godo.NewClient(oauthClient)
+		oauthClient := oauth2.NewClient(context.Background(), tokenSource)
+		c.cl = godo.NewClient(oauthClient)
+	}
+	return c.cl
 }

@@ -29,8 +29,9 @@ func main() {
 		}
 	}
 
-	client := auth.NewClient(cfg.AccessToken)
+	client := auth.GetClient(cfg.AccessToken)
 	if client == nil {
 		log.Fatal("Client not created")
 	}
+
 }
