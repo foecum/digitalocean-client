@@ -12,7 +12,7 @@ type TokenSource struct {
 	AccessToken string
 }
 
-// Token return oauth2 token
+// Token to satisfy the oauth2 Token interface. Returns a Token
 func (t *TokenSource) Token() (*oauth2.Token, error) {
 	token := &oauth2.Token{
 		AccessToken: t.AccessToken,

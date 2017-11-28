@@ -20,55 +20,53 @@ import (
 var ErrCfgUnsupported = errors.New("config file format not supported. Supported formats are json, xml, yaml, toml, hcl")
 
 // Properties for the application
-type Properties struct {
+type Config struct {
 	Name        string `json:"name" xml:"name" yaml:"name" toml:"name" hcl:"name"`
 	AccessToken string `json:"accessToken" xml:"accessToken" yaml:"accessToken" toml:"accessToken" hcl:"accessToken"`
 }
 
 // ReadConfig reads the config from the file provided
-func ReadConfig(path string) (*Properties, error) {
-	cfg := new(Properties)
-
+func (c *Config) ReadConfig(path string) error {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	switch filepath.Ext(path) {
 	case ".json":
-		err := json.Unmarshal(data, cfg)
+		err := json.Unmarshal(data, c)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	case ".xml":
-		err := xml.Unmarshal(data, cfg)
+		err := xml.Unmarshal(data, c)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	case ".yml":
-		err := yaml.Unmarshal(data, cfg)
+		err := yaml.Unmarshal(data, c)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	case ".toml":
-		err := toml.Unmarshal(data, cfg)
+		err := toml.Unmarshal(data, c)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	case ".hcl":
 		obj, err := hcl.Parse(string(data))
 		if err != nil {
-			return nil, err
+			return err
 		}
 
-		if err = hcl.DecodeObject(&cfg, obj); err != nil {
-			return nil, err
+		if err = hcl.DecodeObject(c, obj); err != nil {
+			return err
 		}
 	default:
-		return nil, ErrCfgUnsupported
+		return ErrCfgUnsupported
 	}
 
-	return cfg, nil
+	return nil
 }
 
 func getEnvName(field string) string {
@@ -78,7 +76,7 @@ func getEnvName(field string) string {
 }
 
 // UseCustomEnvConfig updates configs with user environment configs
-func (c *Properties) UseCustomEnvConfig() error {
+func (c *Config) UseCustomEnvConfig() error {
 	cfg := reflect.ValueOf(c).Elem()
 	cTyp := cfg.Type()
 

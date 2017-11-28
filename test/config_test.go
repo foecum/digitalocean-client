@@ -1,7 +1,8 @@
 package test
 
 import (
-	"digitalocean/config"
+	"digitalocean-client/config"
+	"fmt"
 	"os"
 	"testing"
 )
@@ -49,10 +50,14 @@ func TestGoodConfig(t *testing.T) {
 	}
 
 	for i := range testCasesGood {
-		cfg, err := config.ReadConfig(testCasesGood[i].ConfigFile)
+		cfg := &config.Config{}
+		err := cfg.ReadConfig(testCasesGood[i].ConfigFile)
 		if err != nil {
 			t.Fatalf("could not read config file %s: %v", testCasesGood[i].ConfigFile, err)
 		}
+
+		fmt.Println(cfg.AccessToken)
+		fmt.Println(cfg.Name)
 
 		if cfg.AccessToken != testCasesGood[i].AccessToken {
 			t.Errorf("Expected %s, Got %s", testCasesGood[i].AccessToken, cfg.AccessToken)
@@ -81,7 +86,8 @@ func TestBadConfig(t *testing.T) {
 	}
 
 	for i := range testCasesBad {
-		_, err := config.ReadConfig(testCasesBad[i])
+		cfg := &config.Config{}
+		err := cfg.ReadConfig(testCasesBad[i])
 		if err == nil {
 			t.Fatalf("Expected an error")
 		}
@@ -101,7 +107,7 @@ func TestEnvironmentConfig(t *testing.T) {
 		os.Setenv(envKeys[i], envValues[i])
 	}
 
-	cfg := &config.Properties{}
+	cfg := &config.Config{}
 
 	err := cfg.UseCustomEnvConfig()
 
@@ -135,7 +141,8 @@ func TestNoConfigFile(t *testing.T) {
 	}
 
 	for i := range testCasesBad {
-		_, err := config.ReadConfig(testCasesBad[i])
+		cfg := &config.Config{}
+		err := cfg.ReadConfig(testCasesBad[i])
 		if err == nil {
 			t.Fatalf("Expected an error")
 		}
@@ -155,7 +162,8 @@ func TestInvalidConfigFileExtension(t *testing.T) {
 	}
 
 	for i := range testCasesBad {
-		_, err := config.ReadConfig(testCasesBad[i])
+		cfg := &config.Config{}
+		err := cfg.ReadConfig(testCasesBad[i])
 		if err.Error() != config.ErrCfgUnsupported.Error() {
 			t.Errorf("Expected \"%v\" but got \"%v\"", config.ErrCfgUnsupported, err)
 		}
