@@ -94,6 +94,5 @@ func (c *Config) UseCustomEnvConfig() error {
 			cfg.FieldByName(field.Name).SetString(env)
 		}
 	}
-
 	return nil
 }

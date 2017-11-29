@@ -1,10 +1,12 @@
 package main
 
 import (
-	"digitalocean-client/auth"
 	"digitalocean-client/config"
+	"digitalocean-client/handler"
 	"flag"
+	"fmt"
 	"log"
+	"net/http"
 )
 
 func main() {
@@ -29,9 +31,10 @@ func main() {
 		}
 	}
 
-	client := auth.GetClient(cfg.AccessToken)
-	if client == nil {
-		log.Fatal("Client not created")
+	http.Handle("/api", handler.New())
+
+	if err := http.ListenAndServe(":8000", nil); err != nil {
+		fmt.Printf("%v", err)
 	}
 
 }

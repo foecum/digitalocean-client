@@ -11,4 +11,6 @@ A simple interface that implements the DigitalOcean APIs
 - password reset a droplet
 - Delete droplet
 - Resize droplet
+- get user information
+- list regions
 
