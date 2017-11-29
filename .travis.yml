@@ -1,7 +1,7 @@
- language: go
-  go:
-    - 1.9
-  install: "go get -u github.com/haya14busa/goverage"
-  script: "goverage -v -coverprofile=coverage.out ./..."
-  after_script:
+language: go
+go:
+  - 1.9
+install: "go get -u github.com/haya14busa/goverage"
+script: "goverage -v -coverprofile=coverage.out ./..."
+after_script:
   - godacov -t $CODACY_TOKEN -r ./coverage.out -c $TRAVIS_COMMIT
