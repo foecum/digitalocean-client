@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/foecum/digitalocean-client/droplet"
 )
@@ -38,21 +39,21 @@ func (h *Handler) New(accessToken string) {
 	h.droplet = &droplet.Droplet{}
 	h.droplet.RegisterClient(accessToken)
 
-	h.Mux.HandleFunc("/create/droplet", h.createDroplet)
-	h.Mux.HandleFunc("/list/regions", h.getRegions)
+	h.Mux.HandleFunc("/list/droplets", h.getDropletOrRegionList)
+	h.Mux.HandleFunc("/list/regions", h.getDropletOrRegionList)
 }
 
-func (h *Handler) createDroplet(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
-	if r.Method == http.MethodPost {
-		return
+func (h *Handler) getDropletOrRegionList(w http.ResponseWriter, r *http.Request) {
+	var data interface{}
+	var err error
+
+	params := strings.Split(r.URL.Path, "/")
+	switch params[len(params)-1] {
+	case "droplets":
+		data, err = h.droplet.GetDroplets()
+	case "regions":
+		data, err = h.droplet.GetRegions()
 	}
-
-	w.WriteHeader(http.StatusMethodNotAllowed)
-}
-
-func (h *Handler) getRegions(w http.ResponseWriter, r *http.Request) {
-	regions, err := h.droplet.GetRegions()
 
 	w.Header().Add("Content-Type", "application/json")
 	if err != nil {
@@ -60,14 +61,14 @@ func (h *Handler) getRegions(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		err = json.NewEncoder(w).Encode(response{Data: data, Success: err == nil})
 		if err != nil {
-			log.Printf("could not get regions: %v", err)
+			log.Printf("could not get droplets: %v", err)
 		}
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(w).Encode(response{Data: regions, Success: err == nil})
+	err = json.NewEncoder(w).Encode(response{Data: data, Success: err == nil})
 	if err != nil {
-		log.Printf("could not encode regions: %v", err)
+		log.Printf("could not encode droplets: %v", err)
 	}
 }
