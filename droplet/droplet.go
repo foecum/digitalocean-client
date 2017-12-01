@@ -4,31 +4,18 @@ import (
 	"context"
 
 	"github.com/digitalocean/godo"
-	"github.com/foecum/digitalocean-client/auth"
+	"github.com/foecum/digitalocean-client/client"
 )
 
 // Droplet ...
 type Droplet struct {
-	doClient *godo.Client
-}
-
-// RegisterClient ...
-func (d *Droplet) RegisterClient(accessToken string) {
-	client := &auth.Client{}
-	d.doClient = client.GetClient(accessToken)
-}
-
-func (d *Droplet) getOptions() *godo.ListOptions {
-	return &godo.ListOptions{
-		Page:    1,
-		PerPage: 200,
-	}
+	Client *godo.Client
 }
 
 // GetRegions ...
 func (d *Droplet) GetRegions() ([]godo.Region, error) {
 	ctx := context.TODO()
-	regions, _, err := d.doClient.Regions.List(ctx, d.getOptions())
+	regions, _, err := d.Client.Regions.List(ctx, client.GetOptions())
 
 	if err != nil {
 		return nil, err
@@ -41,7 +28,7 @@ func (d *Droplet) GetRegions() ([]godo.Region, error) {
 func (d *Droplet) GetDroplets() ([]godo.Droplet, error) {
 	ctx := context.TODO()
 
-	droplets, _, err := d.doClient.Droplets.List(ctx, d.getOptions())
+	droplets, _, err := d.Client.Droplets.List(ctx, client.GetOptions())
 
 	if err != nil {
 		return nil, err
