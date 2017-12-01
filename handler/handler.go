@@ -12,7 +12,6 @@ import (
 )
 
 /*
-	// h.Mux.HandleFunc("/list/droplet", sayHello)
 	// h.Mux.HandleFunc("/rename/droplet", sayHello)
 	// h.Mux.HandleFunc("/reboot/droplet", sayHello)
 	// h.Mux.HandleFunc("/poweroff/droplet", sayHello)
@@ -20,7 +19,6 @@ import (
 	// h.Mux.HandleFunc("/password/reset/droplet", sayHello)
 	// h.Mux.HandleFunc("/delete/droplet", sayHello)
 	// h.Mux.HandleFunc("/resize/droplet", sayHello)
-	// h.Mux.HandleFunc("/user/info", sayHello)
 */
 
 type response struct {

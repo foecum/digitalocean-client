@@ -4,7 +4,6 @@ A simple interface that implements the DigitalOcean APIs
 
 ## Actions
 - Create Droplet/Create multiple droplet
-- List droplets
 - Reboot a droplet
 - Poweroff a droplet
 - Rebuild a droplet
@@ -12,6 +11,6 @@ A simple interface that implements the DigitalOcean APIs
 - password reset a droplet
 - Delete droplet
 - Resize droplet
-- get user information
-- list regions
+
+- Add caching to deal with the rate limit issue when getting lists 
 
