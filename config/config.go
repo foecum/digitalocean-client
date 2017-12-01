@@ -19,10 +19,14 @@ import (
 // ErrCfgUnsupported ...
 var ErrCfgUnsupported = errors.New("config file format not supported. Supported formats are json, xml, yaml, toml, hcl")
 
-// Properties for the application
+// Config for the application
 type Config struct {
 	Name        string `json:"name" xml:"name" yaml:"name" toml:"name" hcl:"name"`
 	AccessToken string `json:"accessToken" xml:"accessToken" yaml:"accessToken" toml:"accessToken" hcl:"accessToken"`
+	Server      struct {
+		Host string `json:"host" xml:"host" yaml:"port" toml:"host" hcl:"host"`
+		Port int64  `json:"port" xml:"port" yaml:"port" toml:"port" hcl:"port"`
+	}
 }
 
 // ReadConfig reads the config from the file provided

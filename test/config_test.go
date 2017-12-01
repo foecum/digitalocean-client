@@ -1,10 +1,11 @@
 package test
 
 import (
-	"digitalocean-client/config"
 	"fmt"
 	"os"
 	"testing"
+
+	"github.com/foecum/digitalocean-client/config"
 )
 
 type TestConfig struct {
