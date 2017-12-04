@@ -77,7 +77,7 @@ func (h *Handler) getDropletOrRegionList(w http.ResponseWriter, r *http.Request)
 	params := strings.Split(r.URL.Path, "/")
 	switch params[len(params)-1] {
 	case "droplets":
-		data, err = h.droplet.GetDroplets()
+		data, err = h.droplet.GetAllDroplets()
 	case "regions":
 		data, err = h.droplet.GetRegions()
 	}
